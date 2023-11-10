@@ -63,12 +63,10 @@ public class ServicesConfig {
     /**
      * Bean creation method for IssueService. It pre-populates the IssueService with SUPER_ISSUES_COUNT
      * number of 'super issues'.
-     * @param userRepository the repository used by the IssueService to fetch users
-     * @param bookRepository the repository used by the IssueService to fetch books
      * @return the initialized IssueService with pre-populated issues
      */
     @Bean
-    public IssueService issueService(final UserRepository userRepository, final BookRepository bookRepository) {
+    public IssueService issueService() {
         Random random = new Random();
         IssueService issueService = new IssueService();
 
@@ -77,8 +75,9 @@ public class ServicesConfig {
             int month = random.nextInt(12) + 1;
             int day = random.nextInt(28) + 1;
 
-            Book book = bookRepository.getRandomBook();
-            User user = userRepository.getRandomUser();
+            User user = new User(UUID.randomUUID(), "new super user", "new super year of birthday" , random.nextInt(1000));
+            Book book = new Book(UUID.randomUUID(), random.nextInt(1000000000), "new super book", "new super author",
+                    random.nextInt(2023), random.nextInt(600));
 
             issueService.save(new Issue(UUID.randomUUID(), user, book, LocalDate.of(year, month, day), 4));
         }

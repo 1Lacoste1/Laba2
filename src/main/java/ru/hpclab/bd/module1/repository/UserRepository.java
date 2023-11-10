@@ -29,21 +29,6 @@ public class UserRepository {
     private final Map<UUID, User> users = new HashMap<>();
 
     /**
-     * Gets a random user from the repository.
-     * @return a randomly selected User
-     * @throws IllegalStateException if no users are found in the repository
-     */
-    public User getRandomUser() {
-        if (users.isEmpty()) {
-            throw new IllegalStateException(USERS_NOT_FOUND_MSG);
-        }
-        Random random = new Random();
-        List<UUID> keys = new ArrayList<>(users.keySet());
-        UUID randomKey = keys.get(random.nextInt(keys.size()));
-        return users.get(randomKey);
-    }
-
-    /**
      * Fetches all users.
      * @return list of users
      */

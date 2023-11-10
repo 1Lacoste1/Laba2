@@ -25,22 +25,6 @@ public class BookRepository {
     private final Map<UUID, Book> books = new HashMap<>();
 
     /**
-     * Gets a random book from the repository.
-     * @return a randomly selected Book
-     * @throws IllegalStateException if no books are found in the repository
-     */
-    public Book getRandomBook() {
-        if (books.isEmpty()) {
-            throw new IllegalStateException(BOOKS_NOT_FOUND_MSG);
-        }
-
-        Random random = new Random();
-        List<UUID> keys = new ArrayList<>(books.keySet());
-        UUID randomKey = keys.get(random.nextInt(keys.size()));
-        return books.get(randomKey);
-    }
-
-    /**
      * Finds and returns all books.
      * @return a list of all books
      */
