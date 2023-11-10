@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
  */
 @ControllerAdvice
 public class UserExceptionHandler {
-
     /**
      * Handles UserException and returns BAD_REQUEST.
      * @param e user exception
@@ -20,5 +19,4 @@ public class UserExceptionHandler {
     public ResponseEntity<String> onUserException(final UserException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
     }
-
 }

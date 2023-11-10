@@ -19,12 +19,29 @@ public class UserRepository {
      */
     public static final String USER_NOT_FOUND_MSG = "User with ID %s not found";
 
+    public static final String USERS_NOT_FOUND_MSG = "Users not found";
+
     /**
      * User already exists message.
      */
     public static final String USER_EXISTS_MSG = "User with ID %s is already exists";
 
     private final Map<UUID, User> users = new HashMap<>();
+
+    /**
+     * Gets a random user from the repository.
+     * @return a randomly selected User
+     * @throws IllegalStateException if no users are found in the repository
+     */
+    public User getRandomUser() {
+        if (users.isEmpty()) {
+            throw new IllegalStateException(USERS_NOT_FOUND_MSG);
+        }
+        Random random = new Random();
+        List<UUID> keys = new ArrayList<>(users.keySet());
+        UUID randomKey = keys.get(random.nextInt(keys.size()));
+        return users.get(randomKey);
+    }
 
     /**
      * Fetches all users.
@@ -100,7 +117,7 @@ public class UserRepository {
     }
 
     /**
-     * Deletes all users.
+     * Clears all users from the repository.
      */
     public void clear() {
         users.clear();
