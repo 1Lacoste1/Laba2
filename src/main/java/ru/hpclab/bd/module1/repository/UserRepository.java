@@ -19,6 +19,10 @@ public class UserRepository {
      */
     public static final String USER_NOT_FOUND_MSG = "User with ID %s not found";
 
+    /**
+     * Error message indicating that no users are found.
+     * Used when the list of users is empty.
+     */
     public static final String USERS_NOT_FOUND_MSG = "Users not found";
 
     /**

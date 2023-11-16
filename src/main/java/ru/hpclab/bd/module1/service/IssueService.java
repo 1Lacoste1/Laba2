@@ -19,6 +19,10 @@ import static java.lang.String.format;
 public class IssueService {
     private final List<Issue> issues = new ArrayList<>();
 
+    /**
+     * Error message indicating that an issue with the given ID already exists.
+     * Used when attempting to create an issue with a duplicate ID.
+     */
     public static final String ISSUE_EXISTS_MSG = "Issue with ID %s already exists";
 
     /**
@@ -26,7 +30,7 @@ public class IssueService {
      * @param issue the Issue object representing the book issue
      * @return the issued Issue object
      */
-    public Issue issueBookToUser(Issue issue) {
+    public Issue issueBookToUser(final Issue issue) {
         issue.setId(UUID.randomUUID());
         issues.add(issue);
         return issue;
@@ -45,7 +49,7 @@ public class IssueService {
      * @param id the unique identifier of the Issue to retrieve
      * @return the retrieved Issue object if found, or null if not found
      */
-    public Issue getIssueById(UUID id) {
+    public Issue getIssueById(final UUID id) {
         return issues.stream()
                 .filter(issue -> issue.getId().equals(id))
                 .findFirst()
@@ -64,7 +68,7 @@ public class IssueService {
         }
 
         for (int i = 0; i < issues.size(); i++) {
-            Issue issueData = issues.get(i);
+            final Issue issueData = issues.get(i);
             if (issueData.getId().equals(issue.getId())) {
                 throw new IssueException(format(ISSUE_EXISTS_MSG, issue.getId()));
             }
@@ -80,7 +84,7 @@ public class IssueService {
      * @param id the unique identifier of the Issue to delete
      * @return true if the issue was successfully deleted, false if not found
      */
-    public boolean deleteIssueById(UUID id) {
+    public boolean deleteIssueById(final UUID id) {
         return issues.removeIf(issue -> issue.getId().equals(id));
     }
 }

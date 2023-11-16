@@ -21,11 +21,11 @@ public class IssueController {
 
     /**
      * Handles HTTP POST request to create a new issue.
-     * @param issue the Issue object representing the book issue
+     * @param issue the Issue object representing the book issue (should be final)
      * @return a ResponseEntity with the created Issue object if successful
      */
     @PostMapping
-    public ResponseEntity<Issue> createIssue(@RequestBody Issue issue) {
+    public ResponseEntity<Issue> createIssue(@RequestBody final Issue issue) {
         return ResponseEntity.ok(issueService.issueBookToUser(issue));
     }
 
@@ -40,11 +40,11 @@ public class IssueController {
 
     /**
      * Handles HTTP GET request to retrieve an issue by its ID.
-     * @param id the unique identifier of the Issue to retrieve
+     * @param id the unique identifier of the Issue to retrieve (should be final)
      * @return a ResponseEntity with the retrieved Issue object if found, or a not found response if not found
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Issue> getIssueById(@PathVariable UUID id) {
+    public ResponseEntity<Issue> getIssueById(@PathVariable final UUID id) {
         Issue issue = issueService.getIssueById(id);
         if (issue != null) {
             return ResponseEntity.ok(issue);
@@ -55,11 +55,11 @@ public class IssueController {
 
     /**
      * Handles HTTP DELETE request to delete an issue by its ID.
-     * @param id the unique identifier of the Issue to delete
+     * @param id the unique identifier of the Issue to delete (should be final)
      * @return a ResponseEntity with a success response if deleted, or a not found response if not found
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteIssue(@PathVariable UUID id) {
+    public ResponseEntity<Void> deleteIssue(@PathVariable final UUID id) {
         boolean deleted = issueService.deleteIssueById(id);
         if (deleted) {
             return ResponseEntity.ok().build();
@@ -68,4 +68,3 @@ public class IssueController {
         }
     }
 }
-

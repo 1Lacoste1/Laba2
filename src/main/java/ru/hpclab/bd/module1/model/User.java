@@ -20,29 +20,38 @@ import java.util.UUID;
 public class User {
     /**
      * The unique identifier of the user.
+     * @param identifier The unique identifier of the user.
      */
     @NonNull
     private UUID identifier;
 
     /**
      * The date of birth of the user.
+     * @param dateBirthday The date of birth of the user.
      */
     @NonNull
     private String dateBirthday;
 
     /**
      * The full name of the user.
+     * @param fio The full name of the user.
      */
     @NonNull
     private String fio;
 
     /**
      * The ticket number associated with the user.
+     * @param ticketNumber The ticket number associated with the user.
      */
     @NonNull
     private int ticketNumber;
 
-    public User(UUID uuid, String name) {
+    /**
+     * Creates a new User instance with the specified UUID and name.
+     * @param uuid The unique identifier of the user.
+     * @param name The full name of the user.
+     */
+    public User(final UUID uuid, final String name) {
         this.identifier = uuid;
         this.fio = name;
     }
