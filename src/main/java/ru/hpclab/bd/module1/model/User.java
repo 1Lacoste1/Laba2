@@ -1,75 +1,58 @@
 package ru.hpclab.bd.module1.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.lang.NonNull;
+import org.springframework.stereotype.Component;
+
 import java.util.UUID;
 
 /**
- * User model.
+ * Entity representing a user.
+ * It is automatically registered as a bean in the Spring context due to the {@code @Component} annotation.
+ * Lombok annotations are used to generate boilerplate code such as getters, setters, and constructors.
  */
+@Component
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class User {
+    /**
+     * The unique identifier of the user.
+     * @param identifier The unique identifier of the user.
+     */
     @NonNull
     private UUID identifier;
+
+    /**
+     * The date of birth of the user.
+     * @param dateBirthday The date of birth of the user.
+     */
+    @NonNull
+    private String dateBirthday;
+
+    /**
+     * The full name of the user.
+     * @param fio The full name of the user.
+     */
     @NonNull
     private String fio;
 
     /**
-     * Builds new user.
-     * @param identifier user unique id
-     * @param fio user name
-     */
-    public User(@NonNull final UUID identifier, @NonNull final String fio) {
-        this.identifier = identifier;
-        this.fio = fio;
-    }
-
-    /**
-     * Empty contructor.
-     */
-    public User() {
-    }
-
-    /**
-     * Returns user's identifier.
-     * @return user id
+     * The ticket number associated with the user.
+     * @param ticketNumber The ticket number associated with the user.
      */
     @NonNull
-    public UUID getIdentifier() {
-        return identifier;
-    }
+    private int ticketNumber;
 
     /**
-     * Sets new identifier for user.
-     * @param identifier user id
+     * Creates a new User instance with the specified UUID and name.
+     * @param uuid The unique identifier of the user.
+     * @param name The full name of the user.
      */
-    public void setIdentifier(@NonNull final UUID identifier) {
-        this.identifier = identifier;
-    }
-
-    /**
-     * Returns user's name.
-     * @return user name
-     */
-    @NonNull
-    public String getFio() {
-        return fio;
-    }
-
-    /**
-     * Sets new name for user.
-     * @param fio user name
-     */
-    public void setFio(@NonNull final String fio) {
-        this.fio = fio;
-    }
-
-    /**
-     * Returns string representation of the user.
-     */
-    @Override
-    public String toString() {
-        return "User{"
-                + "identifier=" + identifier + ", "
-                + "fio='" + fio + "'"
-                + "}";
+    public User(final UUID uuid, final String name) {
+        this.identifier = uuid;
+        this.fio = name;
     }
 }

@@ -20,6 +20,12 @@ public class UserRepository {
     public static final String USER_NOT_FOUND_MSG = "User with ID %s not found";
 
     /**
+     * Error message indicating that no users are found.
+     * Used when the list of users is empty.
+     */
+    public static final String USERS_NOT_FOUND_MSG = "Users not found";
+
+    /**
      * User already exists message.
      */
     public static final String USER_EXISTS_MSG = "User with ID %s is already exists";
@@ -100,7 +106,7 @@ public class UserRepository {
     }
 
     /**
-     * Deletes all users.
+     * Clears all users from the repository.
      */
     public void clear() {
         users.clear();

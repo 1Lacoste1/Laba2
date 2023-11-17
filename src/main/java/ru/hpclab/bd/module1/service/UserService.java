@@ -1,5 +1,6 @@
 package ru.hpclab.bd.module1.service;
 
+import lombok.Data;
 import ru.hpclab.bd.module1.model.User;
 import ru.hpclab.bd.module1.repository.UserRepository;
 
@@ -7,51 +8,44 @@ import java.util.List;
 import java.util.UUID;
 
 /**
- * Service to control users.
+ * Service class for managing users.
+ * It handles business operations for user entities by using UserRepository for data access.
  */
+@Data
 public class UserService {
-
     private final UserRepository userRepository;
 
     /**
-     * Builds new UserService.
-     * @param userRepository user repository
-     */
-    public UserService(final UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
-
-    /**
-     * Fetches all users.
-     * @return list of users
+     * Retrieves all users from the repository.
+     * @return a list of all users
      */
     public List<User> getAllUsers() {
         return userRepository.findAll();
     }
 
     /**
-     * Fetches user by id.
-     * @param id user id
-     * @return user
+     * Retrieves a user by their identifier.
+     * @param id the identifier of the user to retrieve
+     * @return the user with the specified identifier
      */
     public User getUserById(final String id) {
         return userRepository.findById(UUID.fromString(id));
     }
 
     /**
-     * Creates or updates user.
-     * @param user user to save
-     * @return saved user
+     * Saves a user entity to the repository.
+     * @param user the user to save
+     * @return the saved user entity
      */
     public User saveUser(final User user) {
         return userRepository.save(user);
     }
 
     /**
-     * Updates user.
-     * @param id user id to update
-     * @param user user with new attributes
-     * @return updated user
+     * Updates a user entity with a given identifier.
+     * @param id   the identifier of the user to update
+     * @param user the user entity with updated information
+     * @return the updated user entity
      */
     public User updateUser(final String id, final User user) {
         user.setIdentifier(UUID.fromString(id));
@@ -59,8 +53,8 @@ public class UserService {
     }
 
     /**
-     * Deletes user by id.
-     * @param id user id
+     * Deletes a user entity from the repository by their identifier.
+     * @param id the identifier of the user to delete
      */
     public void deleteUser(final String id) {
         userRepository.delete(UUID.fromString(id));

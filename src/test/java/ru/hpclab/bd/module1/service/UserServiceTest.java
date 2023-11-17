@@ -32,7 +32,6 @@ public final class UserServiceTest {
 
     @Test
     public void testCreateAndGet() {
-        //create
         User user = new User(UUID.randomUUID(), "name");
 
         User savedUser = userService.saveUser(user);
@@ -40,7 +39,6 @@ public final class UserServiceTest {
         Assertions.assertEquals(user.getFio(), savedUser.getFio());
         Mockito.verify(userRepository, Mockito.times(1)).save(user);
 
-        //getAll
         List<User> userList = userService.getAllUsers();
 
         Assertions.assertEquals("name1", userList.get(0).getFio());
