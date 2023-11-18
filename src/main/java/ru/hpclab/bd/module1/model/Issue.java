@@ -1,50 +1,39 @@
 package ru.hpclab.bd.module1.model;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
-import java.util.UUID;
 
 /**
- * Model class representing an issue of a book to a user.
- * This class holds information about the unique identifier, the user, the book, issue date, and usage term in days.
+ * A model class representing an issue.
  */
-@Component
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Issue {
     /**
-     * The unique identifier for the issue.
+     * The unique identifier of the issue.
      */
-    @NonNull
-    private UUID id;
+    private Long id;
 
     /**
-     * The user to whom the book is issued.
+     * The user associated with the issue.
      */
-    @NonNull
     private User user;
 
     /**
-     * The book that is issued to the user.
+     * The book associated with the issue.
      */
-    @NonNull
     private Book book;
 
     /**
-     * The date on which the book was issued.
+     * The date on which the issue was made.
      */
-    @NonNull
     private LocalDate issueDate;
 
     /**
-     * The number of days for which the book is issued to the user.
+     * The period for which the book is issued, in days.
      */
-    @NonNull
-    private int usageTermDays;
+    private Integer usagePeriod;
 }

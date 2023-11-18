@@ -1,90 +1,116 @@
 package ru.hpclab.bd.module1.service;
 
 import lombok.Data;
-import org.springframework.util.ObjectUtils;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.hpclab.bd.module1.controller.exeption.IssueException;
-import ru.hpclab.bd.module1.model.Issue;
+import ru.hpclab.bd.module1.entity.IssueEntity;
+import ru.hpclab.bd.module1.repository.IssueRepository;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.UUID;
-
-import static java.lang.String.format;
+import java.util.Optional;
 
 /**
- * Service class for managing issues related to book borrowing.
- * This class provides methods for creating, retrieving, and deleting issues.
+ * Service for managing issues.
  */
+@Service
 @Data
 public class IssueService {
-    private final List<Issue> issues = new ArrayList<>();
+    private final IssueRepository issueRepository;
 
     /**
-     * Error message indicating that an issue with the given ID already exists.
-     * Used when attempting to create an issue with a duplicate ID.
+     * Сообщение об ошибке, используемое когда проблема (issue) с указанным ID уже существует в системе.
+     * Это форматированная строка, где '%s' будет заменено на фактический ID проблемы.
      */
     public static final String ISSUE_EXISTS_MSG = "Issue with ID %s already exists";
 
     /**
-     * Issues a book to a user.
-     * @param issue the Issue object representing the book issue
-     * @return the issued Issue object
+     * Конструктор для создания экземпляра IssueService.
+     *
+     * @param issueRepository репозиторий для работы с проблемами (issues),
+     *                        предоставляющий доступ к базе данных.
      */
-    public Issue issueBookToUser(final Issue issue) {
-        issue.setId(UUID.randomUUID());
-        issues.add(issue);
-        return issue;
+    @Autowired
+    public IssueService(final IssueRepository issueRepository) {
+        this.issueRepository = issueRepository;
     }
 
     /**
-     * Retrieves all issues.
-     * @return a list of all Issue objects
+     * Get a list of all issues.
+     *
+     * @return List of IssueEntity representing all issues.
      */
-    public List<Issue> getAllIssues() {
-        return new ArrayList<>(issues);
+    public List<IssueEntity> getAllIssues() {
+        return issueRepository.findAll();
     }
 
     /**
-     * Retrieves an issue by its ID.
-     * @param id the unique identifier of the Issue to retrieve
-     * @return the retrieved Issue object if found, or null if not found
+     * Get an issue by its ID.
+     *
+     * @param id The ID of the issue to retrieve.
+     * @return The IssueEntity representing the issue, or empty if not found.
      */
-    public Issue getIssueById(final UUID id) {
-        return issues.stream()
-                .filter(issue -> issue.getId().equals(id))
-                .findFirst()
-                .orElse(null);
+    public Optional<IssueEntity> getIssueById(final Long id) {
+        return issueRepository.findById(id);
     }
 
     /**
-     * Saves an issue. If the issue's identifier is not set, it will generate a new UUID.
-     * @param issue the Issue object to save
-     * @return the saved Issue object with an identifier
-     * @throws IssueException if the issue already exists
+     * Add a new issue.
+     *
+     * @param issue The IssueEntity to add.
+     * @return The added IssueEntity.
      */
-    public Issue save(final Issue issue) {
-        if (ObjectUtils.isEmpty(issue.getId())) {
-            issue.setId(UUID.randomUUID());
-        }
-
-        for (int i = 0; i < issues.size(); i++) {
-            final Issue issueData = issues.get(i);
-            if (issueData.getId().equals(issue.getId())) {
-                throw new IssueException(format(ISSUE_EXISTS_MSG, issue.getId()));
-            }
-        }
-
-        issues.add(issue);
-
-        return issue;
+    public IssueEntity addIssue(final IssueEntity issue) {
+        return issueRepository.save(issue);
     }
 
     /**
-     * Deletes an issue by its ID.
-     * @param id the unique identifier of the Issue to delete
-     * @return true if the issue was successfully deleted, false if not found
+     * Update an existing issue.
+     *
+     * @param id           The ID of the issue to update.
+     * @param issueDetails The updated IssueEntity.
+     * @return The updated IssueEntity.
+     * @throws IssueException If the issue does not exist.
      */
-    public boolean deleteIssueById(final UUID id) {
-        return issues.removeIf(issue -> issue.getId().equals(id));
+    public IssueEntity updateIssue(final Long id, final IssueEntity issueDetails) {
+        final IssueEntity issue = issueRepository.findById(id)
+                .orElseThrow(() -> new IssueException(String.format(ISSUE_EXISTS_MSG, id)));
+        issue.setUser(issueDetails.getUser());
+        issue.setBook(issueDetails.getBook());
+        issue.setIssueDate(issueDetails.getIssueDate());
+        issue.setUsagePeriod(issueDetails.getUsagePeriod());
+        return issueRepository.save(issue);
+    }
+
+    /**
+     * Delete an issue by its ID.
+     *
+     * @param id The ID of the issue to delete.
+     * @throws IssueException If the issue does not exist.
+     */
+    public void deleteIssue(final Long id) {
+        final IssueEntity issue = issueRepository.findById(id)
+                .orElseThrow(() -> new IssueException(String.format(ISSUE_EXISTS_MSG, id)));
+        issueRepository.delete(issue);
+    }
+
+    /**
+     * Get a list of issues by user ID.
+     *
+     * @param userId The ID of the user to retrieve issues for.
+     * @return List of IssueEntity representing the user's issues.
+     */
+    public List<IssueEntity> getIssuesByUser(final Long userId) {
+        return issueRepository.findByUserId(userId);
+    }
+
+    /**
+     * Get a list of issues by book ISBN.
+     *
+     * @param isbn The ISBN of the book to retrieve issues for.
+     * @return List of IssueEntity representing the book's issues.
+     */
+    public List<IssueEntity> getIssuesByBook(final String isbn) {
+        return issueRepository.findByBookIsbn(isbn);
     }
 }

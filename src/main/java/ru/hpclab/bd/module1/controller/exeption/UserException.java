@@ -1,12 +1,14 @@
 package ru.hpclab.bd.module1.controller.exeption;
 
 /**
- * Generic exception related to users resource.
+ * Custom exception class for handling user-related exceptions in the application.
  */
 public class UserException extends RuntimeException {
+
     /**
-     * Builds new UserException from the given message.
-     * @param message exception message
+     * Constructs a new UserException with the specified error message.
+     *
+     * @param message The error message associated with the exception.
      */
     public UserException(final String message) {
         super(message);

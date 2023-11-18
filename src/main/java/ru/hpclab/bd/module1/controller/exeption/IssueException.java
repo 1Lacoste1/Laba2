@@ -1,13 +1,14 @@
 package ru.hpclab.bd.module1.controller.exeption;
 
 /**
- * Custom exception class for handling issue-related exceptions.
- * Extends the RuntimeException class.
+ * Custom exception class for handling issue-related exceptions in the application.
  */
 public class IssueException extends RuntimeException {
+
     /**
      * Constructs a new IssueException with the specified error message.
-     * @param message the error message to associate with the exception
+     *
+     * @param message The error message associated with the exception.
      */
     public IssueException(final String message) {
         super(message);

@@ -1,63 +1,99 @@
 package ru.hpclab.bd.module1.service;
 
 import lombok.Data;
-import ru.hpclab.bd.module1.model.Book;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import ru.hpclab.bd.module1.controller.exeption.BookException;
+import ru.hpclab.bd.module1.entity.BookEntity;
 import ru.hpclab.bd.module1.repository.BookRepository;
 
 import java.util.List;
-import java.util.UUID;
+
+import static java.lang.String.format;
 
 /**
  * Service class for managing books.
- * It encapsulates the logic for accessing and manipulating book data, delegating to {@link BookRepository}.
  */
+@Service
 @Data
 public class BookService {
     private final BookRepository bookRepository;
 
     /**
-     * Retrieves all books from the repository.
-     * @return a list of all books
+     * Сообщение об ошибке, которое используется для указания того, что книга с указанным
+     * ISBN не была найдена.
+     *
+     * @param %s Место, куда будет подставляться конкретный ISBN книги.
      */
-    public List<Book> getAllBooks() {
+    public static final String BOOK_NOT_FOUND_MSG = "Book with ISBN %s not found";
+
+    /**
+     * Конструктор для класса BookService.
+     *
+     * @param bookRepository Репозиторий для доступа к данным о книгах.
+     */
+    @Autowired
+    public BookService(final BookRepository bookRepository) {
+        this.bookRepository = bookRepository;
+    }
+
+    /**
+     * Get a list of all books.
+     *
+     * @return List of BookEntity representing all books.
+     */
+    public List<BookEntity> getAllBooks() {
         return bookRepository.findAll();
     }
 
     /**
-     * Retrieves a book by its identifier.
-     * @param id the identifier of the book to retrieve
-     * @return the book with the specified identifier, if found
-     */
-    public Book getBookById(final String id) {
-        return bookRepository.findById(UUID.fromString(id));
-    }
-
-    /**
-     * Saves the given book entity to the repository.
-     * @param book the book to save
-     * @return the saved book entity
-     */
-    public Book saveBook(final Book book) {
-        return bookRepository.save(book);
-    }
-
-    /**
-     * Updates the book entity with the given identifier.
-     * @param id   the identifier of the book to update
-     * @param book the new book data to update
-     * @return the updated book entity
-     */
-    public Book updateBook(final String id, final Book book) {
-        book.setIdentifier(UUID.fromString(id));
-        return bookRepository.put(book);
-    }
-
-    /**
-     * Deletes the book with the specified identifier from the repository.
+     * Get a book by its ISBN.
      *
-     * @param id the identifier of the book to delete
+     * @param isbn The ISBN of the book to retrieve.
+     * @return The BookEntity representing the book.
+     * @throws BookException If the book is not found.
      */
-    public void deleteBook(final String id) {
-        bookRepository.delete(UUID.fromString(id));
+    public BookEntity getBookByIsbn(final String isbn) {
+        return bookRepository.findById(Long.valueOf(isbn))
+                .orElseThrow(() -> new BookException(format(BOOK_NOT_FOUND_MSG, isbn)));
+    }
+
+    /**
+     * Save a new book.
+     *
+     * @param bookEntity The BookEntity to save.
+     * @return The saved BookEntity.
+     */
+    public BookEntity saveBook(final BookEntity bookEntity) {
+        return bookRepository.save(bookEntity);
+    }
+
+    /**
+     * Update an existing book.
+     *
+     * @param isbn       The ISBN of the book to update.
+     * @param bookEntity The updated BookEntity.
+     * @return The updated BookEntity.
+     */
+    public BookEntity updateBook(final String isbn, final BookEntity bookEntity) {
+        BookEntity existingBook = getBookByIsbn(isbn);
+        existingBook.setTitle(bookEntity.getTitle());
+        existingBook.setAuthorList(bookEntity.getAuthorList());
+        existingBook.setPublicationYear(bookEntity.getPublicationYear());
+        existingBook.setPageCount(bookEntity.getPageCount());
+        return bookRepository.save(existingBook);
+    }
+
+    /**
+     * Delete a book by its ISBN.
+     *
+     * @param isbn The ISBN of the book to delete.
+     * @throws BookException If the book is not found.
+     */
+    public void deleteBook(final String isbn) {
+        if (!bookRepository.existsById(Long.valueOf(isbn))) {
+            throw new BookException(format(BOOK_NOT_FOUND_MSG, isbn));
+        }
+        bookRepository.deleteById(Long.valueOf(isbn));
     }
 }

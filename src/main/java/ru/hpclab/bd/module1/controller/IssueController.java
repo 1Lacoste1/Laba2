@@ -1,70 +1,117 @@
 package ru.hpclab.bd.module1.controller;
 
-import lombok.Data;
-import org.springframework.http.ResponseEntity;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.hpclab.bd.module1.entity.IssueEntity;
+import ru.hpclab.bd.module1.mapper.IssueMapper;
 import ru.hpclab.bd.module1.model.Issue;
 import ru.hpclab.bd.module1.service.IssueService;
 
 import java.util.List;
-import java.util.UUID;
+import java.util.stream.Collectors;
 
 /**
- * Controller class for managing issues related to book borrowing.
- * This class handles HTTP requests related to issues, such as creating, retrieving, and deleting issues.
+ * Controller class for handling issue-related HTTP requests.
  */
 @RestController
 @RequestMapping("/issues")
-@Data
 public class IssueController {
     private final IssueService issueService;
+    private final IssueMapper issueMapper;
 
     /**
-     * Handles HTTP POST request to create a new issue.
-     * @param issue the Issue object representing the book issue (should be final)
-     * @return a ResponseEntity with the created Issue object if successful
+     * Конструктор для создания экземпляра IssueController.
+     * Этот конструктор использует автоматическое внедрение зависимостей IssueService и IssueMapper,
+     * необходимых для управления данными о проблемах (issues) и их преобразования.
+     *
+     * @param issueService Сервис, предоставляющий бизнес-логику для операций с проблемами.
+     * @param issueMapper  Маппер, используемый для преобразования между сущностями и DTO проблем.
      */
-    @PostMapping
-    public ResponseEntity<Issue> createIssue(@RequestBody final Issue issue) {
-        return ResponseEntity.ok(issueService.issueBookToUser(issue));
+    @Autowired
+    public IssueController(final IssueService issueService, final IssueMapper issueMapper) {
+        this.issueService = issueService;
+        this.issueMapper = issueMapper;
     }
 
     /**
-     * Handles HTTP GET request to retrieve all issues.
-     * @return a ResponseEntity with a list of all Issue objects
+     * Get a list of all issues.
+     *
+     * @return List of issues.
      */
-    @GetMapping
-    public ResponseEntity<List<Issue>> getAllIssues() {
-        return ResponseEntity.ok(issueService.getAllIssues());
+    @GetMapping()
+    public List<Issue> getAllIssues() {
+        return issueService.getAllIssues().stream()
+                .map(issueMapper::entity2Issue).collect(Collectors.toList());
     }
 
     /**
-     * Handles HTTP GET request to retrieve an issue by its ID.
-     * @param id the unique identifier of the Issue to retrieve (should be final)
-     * @return a ResponseEntity with the retrieved Issue object if found, or a not found response if not found
+     * Get an issue by its ID.
+     *
+     * @param id The ID of the issue.
+     * @return The issue with the specified ID.
      */
     @GetMapping("/{id}")
-    public ResponseEntity<Issue> getIssueById(@PathVariable final UUID id) {
-        Issue issue = issueService.getIssueById(id);
-        if (issue != null) {
-            return ResponseEntity.ok(issue);
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public Issue getIssueById(@PathVariable final long id) {
+        return issueMapper.entity2Issue(issueService.getIssueById(id)
+                .orElseThrow(() -> new RuntimeException("Issue not found"))); // Custom exception can be used here
     }
 
     /**
-     * Handles HTTP DELETE request to delete an issue by its ID.
-     * @param id the unique identifier of the Issue to delete (should be final)
-     * @return a ResponseEntity with a success response if deleted, or a not found response if not found
+     * Get a list of issues by user ID.
+     *
+     * @param userId The ID of the user.
+     * @return List of issues associated with the user.
+     */
+    @GetMapping("/user/{userId}")
+    public List<Issue> getIssuesByUserId(@PathVariable final long userId) {
+        return issueService.getIssuesByUser(userId).stream()
+                .map(issueMapper::entity2Issue).collect(Collectors.toList());
+    }
+
+    /**
+     * Get a list of issues by book ISBN.
+     *
+     * @param isbn The ISBN of the book.
+     * @return List of issues associated with the book.
+     */
+    @GetMapping("/book/{isbn}")
+    public List<Issue> getIssuesByBookIsbn(@PathVariable final String isbn) {
+        return issueService.getIssuesByBook(isbn).stream()
+                .map(issueMapper::entity2Issue).collect(Collectors.toList());
+    }
+
+    /**
+     * Add a new issue.
+     *
+     * @param issue The issue to be added.
+     * @return The added issue.
+     */
+    @PostMapping()
+    public Issue addIssue(@RequestBody final Issue issue) {
+        IssueEntity issueEntity = issueMapper.issue2Entity(issue);
+        return issueMapper.entity2Issue(issueService.addIssue(issueEntity));
+    }
+
+    /**
+     * Update an existing issue by its ID.
+     *
+     * @param id    The ID of the issue to be updated.
+     * @param issue The updated issue information.
+     * @return The updated issue.
+     */
+    @PutMapping("/{id}")
+    public Issue updateIssue(@PathVariable final long id, @RequestBody final Issue issue) {
+        IssueEntity issueEntity = issueMapper.issue2Entity(issue);
+        return issueMapper.entity2Issue(issueService.updateIssue(id, issueEntity));
+    }
+
+    /**
+     * Delete an issue by its ID.
+     *
+     * @param id The ID of the issue to be deleted.
      */
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteIssue(@PathVariable final UUID id) {
-        boolean deleted = issueService.deleteIssueById(id);
-        if (deleted) {
-            return ResponseEntity.ok().build();
-        } else {
-            return ResponseEntity.notFound().build();
-        }
+    public void deleteIssue(@PathVariable final long id) {
+        issueService.deleteIssue(id);
     }
 }

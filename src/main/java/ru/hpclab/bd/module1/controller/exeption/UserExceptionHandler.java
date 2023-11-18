@@ -6,14 +6,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * Basic handler for UserException.
+ * Global exception handler for handling UserException in the application.
  */
 @ControllerAdvice
 public class UserExceptionHandler {
+
     /**
-     * Handles UserException and returns BAD_REQUEST.
-     * @param e user exception
-     * @return response with exception message and BAD_REQUEST status code
+     * Handles exceptions of type UserException and returns a ResponseEntity with a Bad Request status
+     * and the error message from the exception.
+     *
+     * @param e The UserException to be handled.
+     * @return ResponseEntity with a Bad Request status and the error message.
      */
     @ExceptionHandler
     public ResponseEntity<String> onUserException(final UserException e) {

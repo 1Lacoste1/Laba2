@@ -6,17 +6,17 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 /**
- * Global exception handler for handling IssueException in Spring MVC controllers.
- * This class is annotated with `@ControllerAdvice`, indicating that it is intended to be
- * used as an exception handler across multiple controllers.
+ * Global exception handler for handling IssueException in the application.
  */
 @ControllerAdvice
 public class IssueExceptionHandler {
+
     /**
-     * Exception handler method for handling IssueException.
-     * It returns a ResponseEntity with a BAD_REQUEST status and the exception message as the response body.
-     * @param e the IssueException to handle
-     * @return a ResponseEntity with a BAD_REQUEST status and the exception message as the response body
+     * Handles exceptions of type IssueException and returns a ResponseEntity with a Bad Request status
+     * and the error message from the exception.
+     *
+     * @param e The IssueException to be handled.
+     * @return ResponseEntity with a Bad Request status and the error message.
      */
     @ExceptionHandler
     public ResponseEntity<String> onIssueException(final IssueException e) {

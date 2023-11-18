@@ -1,71 +1,95 @@
 package ru.hpclab.bd.module1.controller;
 
-import lombok.Data;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import ru.hpclab.bd.module1.entity.BookEntity;
+import ru.hpclab.bd.module1.mapper.BookMapper;
 import ru.hpclab.bd.module1.model.Book;
 import ru.hpclab.bd.module1.service.BookService;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 /**
- * REST controller for managing book-related operations.
- * Handles the web requests and invokes service methods to perform CRUD operations on books.
+ * Controller class for handling book-related HTTP requests.
  */
 @RestController
 @RequestMapping("/books")
-@Data
 public class BookController {
     private final BookService bookService;
+    private final BookMapper bookMapper;
 
     /**
-     * Retrieves a list of all books.
-     * @return a list of {@link Book}
+     * Конструктор для создания экземпляра BookController.
+     * Этот конструктор автоматически внедряет зависимости от BookService и BookMapper.
+     * BookService используется для управления бизнес-логикой, связанной с книгами,
+     * а BookMapper применяется для преобразования между сущностями книг и их представлениями в DTO.
+     *
+     * @param bookService Сервис, предоставляющий операции с книгами,
+     *                   такие как получение, добавление, обновление и удаление.
+     * @param bookMapper Маппер, используемый для преобразования между сущностями книг и DTO.
+     */
+    @Autowired
+    public BookController(final BookService bookService, final BookMapper bookMapper) {
+        this.bookService = bookService;
+        this.bookMapper = bookMapper;
+    }
+
+    /**
+     * Get a list of all books.
+     *
+     * @return List of books.
      */
     @GetMapping()
-    public List<Book> getBooks() {
-        return bookService.getAllBooks();
+    public List<Book> getAllBooks() {
+        return bookService.getAllBooks().stream()
+                .map(bookMapper::entity2Book)
+                .collect(Collectors.toList());
     }
 
     /**
-     * Retrieves a single book by its ID.
-     * @param id the ID of the book to retrieve
-     * @return the {@link Book} with the specified ID
+     * Get a book by its ISBN.
+     *
+     * @param isbn The ISBN of the book.
+     * @return The book with the specified ISBN.
      */
-    @GetMapping("/{id}")
-    public Book getBookById(@PathVariable final String id) {
-        return bookService.getBookById(id);
+    @GetMapping("/{isbn}")
+    public Book getBookByIsbn(@PathVariable final String isbn) {
+        return bookMapper.entity2Book(bookService.getBookByIsbn(isbn));
     }
 
     /**
-     * Deletes a book by its ID.
-     * @param id the ID of the book to delete
-     */
-    @DeleteMapping("/{id}")
-    public void deleteBook(@PathVariable final String id) {
-        bookService.deleteBook(id);
-    }
-
-    /**
-     * Saves a new book.
-     * @param book the {@link Book} to save
-     * @return the saved {@link Book}
+     * Save a new book.
+     *
+     * @param book The book to be saved.
+     * @return The saved book.
      */
     @PostMapping()
     public Book saveBook(@RequestBody final Book book) {
-        return bookService.saveBook(book);
+        BookEntity bookEntity = bookMapper.book2Entity(book);
+        return bookMapper.entity2Book(bookService.saveBook(bookEntity));
     }
 
     /**
-     * Updates an existing book.
-     * @param id   the ID of the book to update
-     * @param book the {@link Book} with updated fields
-     * @return the updated {@link Book}
+     * Update an existing book by its ISBN.
+     *
+     * @param isbn The ISBN of the book to be updated.
+     * @param book The updated book information.
+     * @return The updated book.
      */
-    @PutMapping(value = "/{id}")
-    public Book updateBook(
-            @PathVariable(required = false) final String id,
-            @RequestBody final Book book
-    ) {
-        return bookService.updateBook(id, book);
+    @PutMapping("/{isbn}")
+    public Book updateBook(@PathVariable final String isbn, @RequestBody final Book book) {
+        BookEntity bookEntity = bookMapper.book2Entity(book);
+        return bookMapper.entity2Book(bookService.updateBook(isbn, bookEntity));
+    }
+
+    /**
+     * Delete a book by its ISBN.
+     *
+     * @param isbn The ISBN of the book to be deleted.
+     */
+    @DeleteMapping("/{isbn}")
+    public void deleteBook(@PathVariable final String isbn) {
+        bookService.deleteBook(isbn);
     }
 }

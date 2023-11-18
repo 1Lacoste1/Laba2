@@ -1,56 +1,45 @@
 package ru.hpclab.bd.module1.model;
-
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.NonNull;
-import org.springframework.stereotype.Component;
 
-import java.util.UUID;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Entity representing a book.
- * It is automatically registered as a bean in the Spring context due to the {@code @Component} annotation.
- * Lombok annotations are used to generate boilerplate code like getters, setters, and constructors.
+ * A model class representing a book.
  */
-@Component
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Book {
     /**
-     * The unique identifier of the book.
+     * The ISBN (International Standard Book Number) of the book.
      */
-    @NonNull
-    private UUID identifier;
+    private String isbn;
 
     /**
-     * The International Standard Book Number (ISBN) of the book.
+     * The title of the book.
      */
-    @NonNull
-    private long isbn;
+    private String title;
 
     /**
-     * The name of the book.
+     * A list of authors of the book.
      */
-    @NonNull
-    private String name;
-
-    /**
-     * The author(s) of the book.
-     */
-    @NonNull
-    private String authors;
+    private String authorList;
 
     /**
      * The year of publication of the book.
      */
-    @NonNull
-    private int yearPublic;
+    private Integer publicationYear;
 
     /**
-     * The number of pages in the book.
+     * The page count of the book.
      */
-    @NonNull
-    private int numberPages;
+    private Integer pageCount;
+
+    /**
+     * A set of issues associated with this book.
+     */
+    private Set<Issue> issues = new HashSet<>();
 }
