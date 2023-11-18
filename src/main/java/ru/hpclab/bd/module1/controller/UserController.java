@@ -19,12 +19,12 @@ public class UserController {
     private final UserMapper userMapper;
 
     /**
-     * Создает экземпляр UserController для обработки запросов, связанных с пользователями.
-     * Этот конструктор автоматически внедряет зависимости от UserService и UserMapper,
-     * используемые для управления данными пользователей и их преобразования.
+     * Creates an instance of UserController to handle requests related to users.
+     * This constructor automatically injects dependencies from UserService and UserMapper,
+     * which are used to manage user data and their transformation.
      *
-     * @param userService Сервис, предоставляющий логику управления пользователями.
-     * @param userMapper  Маппер, используемый для преобразования между сущностями и DTO пользователя.
+     * @param userService Service providing logic for managing users.
+     * @param userMapper  Mapper used for transforming between user entities and DTOs.
      */
     @Autowired
     public UserController(final UserService userService, final UserMapper userMapper) {

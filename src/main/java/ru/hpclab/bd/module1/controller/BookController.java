@@ -1,5 +1,6 @@
 package ru.hpclab.bd.module1.controller;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.hpclab.bd.module1.entity.BookEntity;
@@ -17,22 +18,21 @@ import java.util.stream.Collectors;
 @RequestMapping("/books")
 public class BookController {
     private final BookService bookService;
-    private final BookMapper bookMapper;
+
+    private final BookMapper bookMapper = Mappers.getMapper(BookMapper.class);
 
     /**
-     * Конструктор для создания экземпляра BookController.
-     * Этот конструктор автоматически внедряет зависимости от BookService и BookMapper.
-     * BookService используется для управления бизнес-логикой, связанной с книгами,
-     * а BookMapper применяется для преобразования между сущностями книг и их представлениями в DTO.
+     * Constructor for creating an instance of BookController.
+     * This constructor automatically injects dependencies from BookService and BookMapper.
+     * BookService is used to manage business logic related to books,
+     * and BookMapper is used to transform between book entities and their DTO representations.
      *
-     * @param bookService Сервис, предоставляющий операции с книгами,
-     *                   такие как получение, добавление, обновление и удаление.
-     * @param bookMapper Маппер, используемый для преобразования между сущностями книг и DTO.
+     * @param bookService Service providing operations on books,
+     *                   such as retrieval, addition, updating, and deletion.
      */
     @Autowired
-    public BookController(final BookService bookService, final BookMapper bookMapper) {
+    public BookController(final BookService bookService) {
         this.bookService = bookService;
-        this.bookMapper = bookMapper;
     }
 
     /**

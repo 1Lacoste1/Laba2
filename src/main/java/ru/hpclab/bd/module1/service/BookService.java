@@ -20,17 +20,16 @@ public class BookService {
     private final BookRepository bookRepository;
 
     /**
-     * Сообщение об ошибке, которое используется для указания того, что книга с указанным
-     * ISBN не была найдена.
+     * Error message used to indicate that a book with the specified ISBN was not found.
      *
-     * @param %s Место, куда будет подставляться конкретный ISBN книги.
+     * @param %s Placeholder where a specific book's ISBN will be inserted.
      */
     public static final String BOOK_NOT_FOUND_MSG = "Book with ISBN %s not found";
 
     /**
-     * Конструктор для класса BookService.
+     * Constructor for the BookService class.
      *
-     * @param bookRepository Репозиторий для доступа к данным о книгах.
+     * @param bookRepository Repository for accessing book data.
      */
     @Autowired
     public BookService(final BookRepository bookRepository) {

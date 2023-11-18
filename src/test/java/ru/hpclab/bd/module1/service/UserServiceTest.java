@@ -1,68 +1,91 @@
-//package ru.hpclab.bd.module1.service;
-//
-//import org.junit.jupiter.api.Assertions;
-//import org.junit.jupiter.api.Test;
-//import org.junit.jupiter.api.extension.ExtendWith;
-//import org.mockito.Mockito;
-//import org.springframework.beans.factory.annotation.Autowired;
-//import org.springframework.context.annotation.Bean;
-//import org.springframework.context.annotation.Configuration;
-//import org.springframework.test.context.ContextConfiguration;
-//import org.springframework.test.context.junit.jupiter.SpringExtension;
-//import ru.hpclab.bd.module1.model.User;
-//
-//import java.util.Arrays;
-//import java.util.List;
-//import java.util.UUID;
-//
-//import static org.mockito.ArgumentMatchers.any;
-//import static org.mockito.Mockito.mock;
-//import static org.mockito.Mockito.when;
-//
-//@ExtendWith(SpringExtension.class)
-//@ContextConfiguration(classes = {UserServiceTest.UserServiceTestConfiguration.class})
-//public final class UserServiceTest {
-//
-//    @Autowired
-//    private UserService userService;
-//
-//    @Autowired
-//    private UserRepository userRepository;
-//
-//    @Test
-//    public void testCreateAndGet() {
-//        User user = new User(UUID.randomUUID(), "name");
-//
-//        User savedUser = userService.saveUser(user);
-//
-//        Assertions.assertEquals(user.getFio(), savedUser.getFio());
-//        Mockito.verify(userRepository, Mockito.times(1)).save(user);
-//
-//        List<User> userList = userService.getAllUsers();
-//
-//        Assertions.assertEquals("name1", userList.get(0).getFio());
-//        Assertions.assertEquals("name2", userList.get(1).getFio());
-//        Mockito.verify(userRepository, Mockito.times(1)).findAll();
-//
-//    }
-//
-//    @Configuration
-//    static class UserServiceTestConfiguration {
-//
-//        @Bean
-//        UserRepository userRepository() {
-//            UserRepository userRepository = mock(UserRepository.class);
-//            when(userRepository.save(any())).thenReturn(new User(UUID.randomUUID(), "name"));
-//            when(userRepository.findAll())
-//                    .thenReturn(Arrays.asList(new User(UUID.randomUUID(), "name1"),
-//                            new User(UUID.randomUUID(), "name2")));
-//            return userRepository;
-//        }
-//
-//        @Bean
-//        UserService userService(final UserRepository userRepository) {
-//            return new UserService(userRepository);
-//        }
-//    }
-//
-//}
+package ru.hpclab.bd.module1.service;
+
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import ru.hpclab.bd.module1.entity.UserEntity;
+import ru.hpclab.bd.module1.repository.UserRepository;
+
+import java.util.List;
+import java.util.Optional;
+
+import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.any;
+import static org.mockito.Mockito.doNothing;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+
+public class UserServiceTest {
+
+    @Mock
+    private UserRepository userRepository;
+
+    @InjectMocks
+    private UserService userService;
+
+    /**
+     * Инициализация перед каждым тестом. Открывает моки для всех полей с аннотацией @Mock.
+     */
+    @BeforeEach
+    void setUp() {
+        MockitoAnnotations.openMocks(this);
+    }
+
+    @Test
+    public void getAllUsers_shouldReturnListOfUsers() {
+        when(userRepository.findAll()).thenReturn(List.of(new UserEntity()));
+        List<UserEntity> users = userService.getAllUsers();
+        assertNotNull(users);
+        assertFalse(users.isEmpty());
+        verify(userRepository).findAll();
+    }
+
+    @Test
+    public void getUserById_shouldReturnUserWhenExists() {
+        long userId = 1L;
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user));
+
+        UserEntity foundUser = userService.getUserById(userId);
+        assertNotNull(foundUser);
+        assertEquals(userId, foundUser.getId());
+        verify(userRepository).findById(userId);
+    }
+
+    @Test
+    public void saveUser_shouldReturnSavedUser() {
+        UserEntity user = new UserEntity();
+        when(userRepository.save(any(UserEntity.class))).thenReturn(user);
+
+        UserEntity savedUser = userService.saveUser(user);
+        assertNotNull(savedUser);
+        verify(userRepository).save(user);
+    }
+
+    @Test
+    public void deleteUser_shouldInvokeRepositoryDelete() {
+        long userId = 1L;
+        doNothing().when(userRepository).deleteById(userId);
+        userService.deleteUser(userId);
+        verify(userRepository).deleteById(userId);
+    }
+
+    @Test
+    public void updateUser_shouldReturnUpdatedUser() {
+        long userId = 1L;
+        UserEntity user = new UserEntity();
+        user.setId(userId);
+        when(userRepository.save(any(UserEntity.class))).thenReturn(user);
+
+        UserEntity updatedUser = userService.updateUser(userId, user);
+        assertNotNull(updatedUser);
+        assertEquals(userId, updatedUser.getId());
+        verify(userRepository).save(user);
+    }
+
+}

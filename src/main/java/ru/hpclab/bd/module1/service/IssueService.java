@@ -19,16 +19,16 @@ public class IssueService {
     private final IssueRepository issueRepository;
 
     /**
-     * Сообщение об ошибке, используемое когда проблема (issue) с указанным ID уже существует в системе.
-     * Это форматированная строка, где '%s' будет заменено на фактический ID проблемы.
+     * Error message used when an issue with the specified ID already exists in the system.
+     * This is a formatted string where '%s' will be replaced with the actual issue ID.
      */
     public static final String ISSUE_EXISTS_MSG = "Issue with ID %s already exists";
 
     /**
-     * Конструктор для создания экземпляра IssueService.
+     * Constructor for creating an instance of IssueService.
      *
-     * @param issueRepository репозиторий для работы с проблемами (issues),
-     *                        предоставляющий доступ к базе данных.
+     * @param issueRepository Repository for working with issues,
+     *                        providing access to the database.
      */
     @Autowired
     public IssueService(final IssueRepository issueRepository) {

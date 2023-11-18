@@ -1,5 +1,6 @@
 package ru.hpclab.bd.module1.controller;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.hpclab.bd.module1.entity.IssueEntity;
@@ -17,20 +18,18 @@ import java.util.stream.Collectors;
 @RequestMapping("/issues")
 public class IssueController {
     private final IssueService issueService;
-    private final IssueMapper issueMapper;
+    private final IssueMapper issueMapper = Mappers.getMapper(IssueMapper.class);;
 
     /**
-     * Конструктор для создания экземпляра IssueController.
-     * Этот конструктор использует автоматическое внедрение зависимостей IssueService и IssueMapper,
-     * необходимых для управления данными о проблемах (issues) и их преобразования.
+     * Constructor for creating an instance of IssueController.
+     * This constructor uses automatic dependency injection of IssueService and IssueMapper,
+     * required for managing issues data and their transformation.
      *
-     * @param issueService Сервис, предоставляющий бизнес-логику для операций с проблемами.
-     * @param issueMapper  Маппер, используемый для преобразования между сущностями и DTO проблем.
+     * @param issueService Service providing business logic for issue operations.
      */
     @Autowired
-    public IssueController(final IssueService issueService, final IssueMapper issueMapper) {
+    public IssueController(final IssueService issueService) {
         this.issueService = issueService;
-        this.issueMapper = issueMapper;
     }
 
     /**

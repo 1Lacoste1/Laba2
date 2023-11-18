@@ -26,7 +26,6 @@ import java.time.LocalDate;
 @Configuration
 public class ServicesConfig {
     private static final int NUM_USERS = 5;
-    private static final int BIRTH_YEAR = 1990;
     private static final int START_YEAR = 2000;
     private static final int START_MONTH = 1;
     private static final int START_DAY = 1;
@@ -48,7 +47,7 @@ public class ServicesConfig {
         for (int i = 0; i < NUM_USERS; i++) {
             UserEntity userEntity = new UserEntity();
             userEntity.setFullName("User");
-            userEntity.setBirthDate(LocalDate.of(BIRTH_YEAR, START_MONTH, START_DAY));
+            userEntity.setBirthDate(LocalDate.of(START_YEAR, START_MONTH, START_DAY));
             userEntity.setLibraryCardNumber("LCN");
             userRepository.save(userEntity);
         }

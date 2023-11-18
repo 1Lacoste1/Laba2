@@ -19,15 +19,15 @@ public class UserService {
     private final UserRepository userRepository;
 
     /**
-     * Сообщение об ошибке, отображаемое, когда пользователь с указанным ID не найден.
-     * Это форматированная строка, где '%s' будет заменено на фактический ID пользователя.
+     * Error message displayed when a user with the specified ID is not found.
+     * This is a formatted string where '%s' will be replaced with the actual user ID.
      */
     public static final String USER_NOT_FOUND_MSG = "User with ID %s not found";
 
     /**
-     * Конструктор для создания экземпляра UserService.
+     * Constructor for creating an instance of UserService.
      *
-     * @param userRepository репозиторий для работы с пользователями.
+     * @param userRepository Repository for working with users.
      */
     @Autowired
     public UserService(final UserRepository userRepository) {
