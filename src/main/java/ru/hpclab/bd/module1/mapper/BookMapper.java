@@ -1,4 +1,5 @@
 package ru.hpclab.bd.module1.mapper;
+
 import org.mapstruct.Mapper;
 import ru.hpclab.bd.module1.entity.BookEntity;
 import ru.hpclab.bd.module1.model.Book;

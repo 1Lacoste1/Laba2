@@ -1,7 +1,6 @@
 package ru.hpclab.bd.module1.mapper;
 
 import org.mapstruct.Mapper;
-import org.springframework.stereotype.Component;
 import ru.hpclab.bd.module1.entity.UserEntity;
 import ru.hpclab.bd.module1.model.User;
 
