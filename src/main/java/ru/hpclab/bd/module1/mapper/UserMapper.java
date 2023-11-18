@@ -9,7 +9,6 @@ import ru.hpclab.bd.module1.model.User;
  * Mapper interface for mapping between User and UserEntity objects.
  */
 @Mapper
-@Component
 public interface UserMapper {
     /**
      * Map a User object to a UserEntity object.

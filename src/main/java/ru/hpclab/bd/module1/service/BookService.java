@@ -1,5 +1,6 @@
 package ru.hpclab.bd.module1.service;
 
+import org.springframework.transaction.annotation.Transactional;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,7 @@ import static java.lang.String.format;
  */
 @Service
 @Data
+@Transactional(readOnly = true)
 public class BookService {
     private final BookRepository bookRepository;
 
@@ -63,6 +65,7 @@ public class BookService {
      * @param bookEntity The BookEntity to save.
      * @return The saved BookEntity.
      */
+    @Transactional
     public BookEntity saveBook(final BookEntity bookEntity) {
         return bookRepository.save(bookEntity);
     }
@@ -74,6 +77,7 @@ public class BookService {
      * @param bookEntity The updated BookEntity.
      * @return The updated BookEntity.
      */
+    @Transactional
     public BookEntity updateBook(final String isbn, final BookEntity bookEntity) {
         BookEntity existingBook = getBookByIsbn(isbn);
         existingBook.setTitle(bookEntity.getTitle());
@@ -89,6 +93,7 @@ public class BookService {
      * @param isbn The ISBN of the book to delete.
      * @throws BookException If the book is not found.
      */
+    @Transactional
     public void deleteBook(final String isbn) {
         if (!bookRepository.existsById(Long.valueOf(isbn))) {
             throw new BookException(format(BOOK_NOT_FOUND_MSG, isbn));

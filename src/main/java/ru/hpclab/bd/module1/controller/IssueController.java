@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/issues")
 public class IssueController {
     private final IssueService issueService;
-    private final IssueMapper issueMapper = Mappers.getMapper(IssueMapper.class);;
+    private final IssueMapper issueMapper = Mappers.getMapper(IssueMapper.class);
 
     /**
      * Constructor for creating an instance of IssueController.

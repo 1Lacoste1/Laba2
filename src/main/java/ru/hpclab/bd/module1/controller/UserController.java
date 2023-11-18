@@ -1,5 +1,6 @@
 package ru.hpclab.bd.module1.controller;
 
+import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import ru.hpclab.bd.module1.mapper.UserMapper;
@@ -16,7 +17,7 @@ import java.util.stream.Collectors;
 @RequestMapping("/users")
 public class UserController {
     private final UserService userService;
-    private final UserMapper userMapper;
+    private final UserMapper userMapper = Mappers.getMapper(UserMapper.class);
 
     /**
      * Creates an instance of UserController to handle requests related to users.
@@ -24,12 +25,10 @@ public class UserController {
      * which are used to manage user data and their transformation.
      *
      * @param userService Service providing logic for managing users.
-     * @param userMapper  Mapper used for transforming between user entities and DTOs.
      */
     @Autowired
-    public UserController(final UserService userService, final UserMapper userMapper) {
+    public UserController(final UserService userService) {
         this.userService = userService;
-        this.userMapper = userMapper;
     }
 
     /**

@@ -3,6 +3,7 @@ package ru.hpclab.bd.module1.service;
 import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.hpclab.bd.module1.controller.exeption.IssueException;
 import ru.hpclab.bd.module1.entity.IssueEntity;
 import ru.hpclab.bd.module1.repository.IssueRepository;
@@ -15,6 +16,7 @@ import java.util.Optional;
  */
 @Service
 @Data
+@Transactional(readOnly = true)
 public class IssueService {
     private final IssueRepository issueRepository;
 
@@ -60,6 +62,7 @@ public class IssueService {
      * @param issue The IssueEntity to add.
      * @return The added IssueEntity.
      */
+    @Transactional
     public IssueEntity addIssue(final IssueEntity issue) {
         return issueRepository.save(issue);
     }
@@ -72,6 +75,7 @@ public class IssueService {
      * @return The updated IssueEntity.
      * @throws IssueException If the issue does not exist.
      */
+    @Transactional
     public IssueEntity updateIssue(final Long id, final IssueEntity issueDetails) {
         final IssueEntity issue = issueRepository.findById(id)
                 .orElseThrow(() -> new IssueException(String.format(ISSUE_EXISTS_MSG, id)));
@@ -88,6 +92,7 @@ public class IssueService {
      * @param id The ID of the issue to delete.
      * @throws IssueException If the issue does not exist.
      */
+    @Transactional
     public void deleteIssue(final Long id) {
         final IssueEntity issue = issueRepository.findById(id)
                 .orElseThrow(() -> new IssueException(String.format(ISSUE_EXISTS_MSG, id)));

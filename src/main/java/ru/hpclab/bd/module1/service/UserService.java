@@ -1,6 +1,6 @@
 package ru.hpclab.bd.module1.service;
 
-import jakarta.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import ru.hpclab.bd.module1.controller.exeption.UserException;
@@ -15,6 +15,7 @@ import static java.lang.String.format;
  * Service for managing user-related operations.
  */
 @Service
+@Transactional(readOnly = true)
 public class UserService {
     private final UserRepository userRepository;
 
